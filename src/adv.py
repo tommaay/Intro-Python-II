@@ -4,9 +4,9 @@ from item import Item
 
 # Declare all the rooms
 
-rooms = {
+room = {
     'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons"),
+                     "North of you, the cave mount beckons."),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
 passages run north and east."""),
@@ -25,12 +25,12 @@ earlier adventurers. The only exit is to the south."""),
 
 # Declare all the items
 
-items = {
-    'sword': Item('Excalibur', 'The sword of King Arthur'),
-    'shield': Item('Warshield', "Deathguard's Warshield"),
-    'hammer': Item('Crusher', 'Hammer of Khazgoroth'),
-    'axe': Item('Slicer', 'Drakefist Axe'),
-    'helmet': Item('Dreadnaught', 'Dreadnaught Helmet'),
+item = {
+    'sword': Item('Excalibur', 'The sword of King Arthur.'),
+    'shield': Item('Warshield', "Deathguard's Warshield."),
+    'hammer': Item('Crusher', 'Hammer of Khazgoroth.'),
+    'axe': Item('Slicer', 'Drakefist Axe.'),
+    'helmet': Item('Dreadnaught', 'Dreadnaught Helmet.'),
     'dagger': Item('Daggerfen', 'The mystical dagger.'),
     'wand': Item('Blackfire', 'Blackfire wand.'),
     'gold': Item('Gold', 'A heavy piece of gold bar.'),
@@ -48,19 +48,46 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+# Add items to rooms
+
+room['outside'].add_item(item['sword'])
+room['foyer'].add_item(item['shield'])
+room['foyer'].add_item(item['hammer'])
+room['foyer'].add_item(item['wand'])
+room['overlook'].add_item(item['axe'])
+room['narrow'].add_item(item['helmet'])
+room['narrow'].add_item(item['dagger'])
+room['treasure'].add_item(item['gold'])
+
 #
 # Main
 #
 
 # Make a new player object that is currently in the 'outside' room.
 
+player = Player(room['outside'])
+
 # Write a loop that:
-#
-# * Prints the current room name
-# * Prints the current description (the textwrap module might be useful here).
-# * Waits for user input and decides what to do.
-#
-# If the user enters a cardinal direction, attempt to move to the room there.
-# Print an error message if the movement isn't allowed.
-#
-# If the user enters "q", quit the game.
+while True:
+    room = player.room
+    # Prints the current room name
+    print(f'You are at: {room.name}\n')
+    # Prints the current description (the textwrap module might be useful here).
+    print(f'{room.description}\n')
+
+    if len(room.room_items) > 0:
+        print('These items are available in this room:')
+        for i in room.room_items:
+            print(f'- {i.name}\n')
+    else:
+        print('There are no items in this room.')
+
+    # Waits for user input and decides what to do.
+
+    # If the user enters a cardinal direction, attempt to move to the room there.
+
+    # Print an error message if the movement isn't allowed.
+
+    # If the user enters "q", quit the game.
+
+    break

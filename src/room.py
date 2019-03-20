@@ -3,10 +3,10 @@
 
 
 class Room:
-    def __init__(self, name, description, items=[]):
-        self.name = description
+    def __init__(self, name, description):
+        self.name = name
         self.description = description
-        self.room_items = items
+        self.room_items = []
 
     # adds item to the rooms to initialize the game
     def add_item(self, item):

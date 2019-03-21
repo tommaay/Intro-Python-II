@@ -60,28 +60,32 @@ room['treasure'].add_item(item['gold'])
 
 # Make a new player object that is currently in the 'outside' room.
 player = Player(room['outside'])
-room = player.room
 
 # Move player to chose direction
 
 
-def move_player(player, room, cmd):
-    if hasattr(room, cmd):
+def move_player(player, room, attr):
+    if hasattr(room, attr):
         # get the new room info
-        new_room = getattr(room, cmd)
+        print('move player attr: ', attr)
+        new_room = getattr(room, attr)
+        print('old room: ', player.room.name)
         player.move(new_room)
+        print('new room: ', player.room.name)
     else:
         # Print an error message if the movement isn't allowed.
         print('\nThere is nothing in that direction.\n')
-        cmd = input(
+        attr = input(
             "Please choose another direction: \n - 'n': north\n - 's': south\n - 'e': east\n - 'w': west\n\nOr 'q' to quit the game.\n\n")
-        attr = cmd + '_to'
+        attr = attr + '_to'
         # Continue asking user until we get a direction that the user can go
         move_player(player, room, attr)
 
 
 # Write a loop that:
 while True:
+    room = player.room
+
     # Print the player's current items
     if len(player.player_items) == 0:
         print('You currently have 0 items in your bag.\n')
@@ -102,11 +106,11 @@ while True:
     else:
         print('These items are available in this room:')
         for i in room.room_items:
-            print(f'- {i.name}\n')
+            print(f'   -{i.name}')
 
     # Waits for user input and decides what to do.
     cmd = input(
-        "Please enter a direction where you want to go: \n - 'n': north\n - 's': south\n - 'e': east\n - 'w': west\n\nEnter 'take' space item name to take an item from the room. Or 'drop' space item name to drop and item from your bag\n\nOr 'q' to quit the game.\n\n")
+        "\nPlease enter a direction where you want to go: \n - 'n': north\n - 's': south\n - 'e': east\n - 'w': west\n\nEnter 'take' space item name to take an item from the room. Or 'drop' space item name to drop and item from your bag\n\nOr 'q' to quit the game.\n\n")
 
     # split the inputs and store them in separate variables
     cmd = cmd.split()

@@ -3,11 +3,9 @@ from player import Player
 from item import Item
 
 # Declare all the rooms
-
 room = {
     'outside':  Room("Outside Cave Entrance",
                      "North of you, the cave mount beckons."),
-
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
 passages run north and east."""),
 
@@ -24,7 +22,6 @@ earlier adventurers. The only exit is to the south."""),
 }
 
 # Declare all the items
-
 item = {
     'sword': Item('Excalibur', 'The sword of King Arthur.'),
     'shield': Item('Warshield', "Deathguard's Warshield."),
@@ -38,7 +35,6 @@ item = {
 
 
 # Link rooms together
-
 room['outside'].n_to = room['foyer']
 room['foyer'].s_to = room['outside']
 room['foyer'].n_to = room['overlook']
@@ -49,7 +45,6 @@ room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
 # Add items to rooms
-
 room['outside'].add_item(item['sword'])
 room['foyer'].add_item(item['shield'])
 room['foyer'].add_item(item['hammer'])
@@ -64,14 +59,33 @@ room['treasure'].add_item(item['gold'])
 #
 
 # Make a new player object that is currently in the 'outside' room.
-
 player = Player(room['outside'])
+
+
+# Move player to chose direction
+def move_player(player, room, cmd):
+    print('attr:', cmd)
+    if hasattr(room, cmd):
+        # get the new room info
+        new_room = getattr(room, cmd)
+        player.move(new_room)
+        print('new_room:', new_room.name)
+    else:
+        # Print an error message if the movement isn't allowed.
+        print('\nThere is nothing in that direction.\n')
+        cmd = input(
+            "Please choose another direction: \n - 'n': north\n - 's': south\n - 'e': east\n - 'w': west\n\nOr 'q' to quit the game.\n\n")
+        attr = cmd + '_to'
+        # Continue asking user until we get a direction that the user can go
+        move_player(player, room, attr)
+
 
 # Write a loop that:
 while True:
     room = player.room
     # Prints the current room name
     print(f'You are at: {room.name}\n')
+
     # Prints the current description (the textwrap module might be useful here).
     print(f'{room.description}\n')
 
@@ -83,11 +97,15 @@ while True:
         print('There are no items in this room.')
 
     # Waits for user input and decides what to do.
+    cmd = input(
+        "Please enter a direction where you want to go: \n - 'n': north\n - 's': south\n - 'e': east\n - 'w': west\n\nOr 'q' to quit the game.\n\n")
 
     # If the user enters a cardinal direction, attempt to move to the room there.
-
-    # Print an error message if the movement isn't allowed.
-
+    if cmd != 'q':
+        attr = cmd + '_to'
+        move_player(player, room, attr)
+    else:
+        break
     # If the user enters "q", quit the game.
 
-    break
+    continue

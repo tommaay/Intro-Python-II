@@ -17,7 +17,7 @@ class Player:
 
     # remove item from the player's bag
     def drop_item(self, item):
-        self.player_items.append(item)
+        self.player_items.remove(item)
 
     # move player to new room
     def move(self, room):

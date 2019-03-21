@@ -60,16 +60,16 @@ room['treasure'].add_item(item['gold'])
 
 # Make a new player object that is currently in the 'outside' room.
 player = Player(room['outside'])
-
+room = player.room
 
 # Move player to chose direction
+
+
 def move_player(player, room, cmd):
-    print('attr:', cmd)
     if hasattr(room, cmd):
         # get the new room info
         new_room = getattr(room, cmd)
         player.move(new_room)
-        print('new_room:', new_room.name)
     else:
         # Print an error message if the movement isn't allowed.
         print('\nThere is nothing in that direction.\n')
@@ -82,30 +82,62 @@ def move_player(player, room, cmd):
 
 # Write a loop that:
 while True:
-    room = player.room
+    # Print the player's current items
+    if len(player.player_items) == 0:
+        print('You currently have 0 items in your bag.\n')
+    else:
+        print('Your items:')
+        for i in player.player_items:
+            print(f'  - {i}')
+        print()
+
     # Prints the current room name
     print(f'You are at: {room.name}\n')
 
     # Prints the current description (the textwrap module might be useful here).
     print(f'{room.description}\n')
 
-    if len(room.room_items) > 0:
+    if len(room.room_items) == 0:
+        print('There are no items in this room.\n')
+    else:
         print('These items are available in this room:')
         for i in room.room_items:
             print(f'- {i.name}\n')
-    else:
-        print('There are no items in this room.')
 
     # Waits for user input and decides what to do.
     cmd = input(
-        "Please enter a direction where you want to go: \n - 'n': north\n - 's': south\n - 'e': east\n - 'w': west\n\nOr 'q' to quit the game.\n\n")
+        "Please enter a direction where you want to go: \n - 'n': north\n - 's': south\n - 'e': east\n - 'w': west\n\nEnter 'take' space item name to take an item from the room. Or 'drop' space item name to drop and item from your bag\n\nOr 'q' to quit the game.\n\n")
+
+    # split the inputs and store them in separate variables
+    cmd = cmd.split()
+    if len(cmd) == 1:
+        action = cmd[0]
+
+    elif len(cmd) == 2:
+        action = cmd[0]
+        item = cmd[1]
 
     # If the user enters a cardinal direction, attempt to move to the room there.
-    if cmd != 'q':
-        attr = cmd + '_to'
+    if action != 'q' and len(action) == 1:
+        attr = action + '_to'
         move_player(player, room, attr)
+
+    elif action == 'take':
+        player.take_item(item)
+
+        # Find the item and remove it from the room when player takes it.n
+        for i in room.room_items:
+            if i.name == item:
+                room.remove_item(i)
+
+    elif action == 'drop':
+        for i in player.player_items:
+            if i == item:
+                player.drop_item(i)
+
     else:
         break
-    # If the user enters "q", quit the game.
 
+    # Print a separator to easily see the moves
+    print('\n-------------------------------------------------------------------\n')
     continue

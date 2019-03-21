@@ -14,4 +14,4 @@ class Room:
 
     # remove item from the room when player takes it
     def remove_item(self, item):
-        self.room_items.append(item)
+        self.room_items.remove(item)
